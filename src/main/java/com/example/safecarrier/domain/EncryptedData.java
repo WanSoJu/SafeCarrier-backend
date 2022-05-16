@@ -1,5 +1,6 @@
 package com.example.safecarrier.domain;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,17 +18,29 @@ public class EncryptedData {
     @Column(name = "data_id")
     private Long id;
 
-    @Column
-    private Blob imageData;
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] imageData;
 
-    @Column
-    private Blob videoData;
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] videoData;
 
-    @Column(columnDefinition = "TEXT")
-    private String textData;
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] textData;
 
     @Column
     @CreatedDate
     private LocalDateTime createdTime;
+
+    @Column
+    private Integer dtype; //1: image 2: video 3: text
+
+    @Builder
+    public EncryptedData(byte[] image, byte[] video, byte[] text, Integer dtype){
+        this.imageData=image;
+        this.videoData=video;
+        this.textData=text;
+        this.dtype=dtype;
+        this.createdTime=LocalDateTime.now();
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.example.safecarrier.domain;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -24,6 +25,9 @@ public class Link {
     @CreatedDate
     private LocalDateTime createdTime;
 
+    @Column
+    private String lid; //링크의 고유 식별자
+
     @OneToOne
     @JoinColumn(name = "data_id")
     private EncryptedData data;
@@ -31,6 +35,15 @@ public class Link {
     @OneToOne
     @JoinColumn(name = "read_id")
     private ReadCount readCount;
+
+    @Builder
+    public Link(String link, String lid, EncryptedData data, ReadCount readCount){
+        this.link=link;
+        this.lid=lid;
+        this.data=data;
+        this.readCount=readCount;
+        this.createdTime=LocalDateTime.now();
+    }
 
 
 }

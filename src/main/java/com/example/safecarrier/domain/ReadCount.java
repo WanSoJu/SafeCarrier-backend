@@ -1,5 +1,6 @@
 package com.example.safecarrier.domain;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,12 @@ public class ReadCount {
     private Integer readLimit; //최대 조회 가능 횟수
 
     @Column
-    private Integer readCount; //해당 링크의 데이터가 조회된 횟수
+    private Integer readCount=0; //해당 링크의 데이터가 조회된 횟수
+
+    @Builder
+    public ReadCount(Integer limit){
+        this.readLimit=limit;
+    }
+
 
 }
