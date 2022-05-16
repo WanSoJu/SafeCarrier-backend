@@ -34,13 +34,17 @@ public class EncryptedData {
     @Column
     private Integer dtype; //1: image 2: video 3: text
 
+    @Column
+    private String fileName;
+
     @Builder
-    public EncryptedData(byte[] image, byte[] video, byte[] text, Integer dtype){
+    public EncryptedData(byte[] image, byte[] video, byte[] text, Integer dtype,String fileName){
         this.imageData=image;
         this.videoData=video;
         this.textData=text;
         this.dtype=dtype;
         this.createdTime=LocalDateTime.now();
+        this.fileName=fileName;
     }
 
 }

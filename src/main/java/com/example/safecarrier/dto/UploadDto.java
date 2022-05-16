@@ -11,4 +11,5 @@ public class UploadDto {
     private Integer readLimit;
     private String appLink;
     private String lid;
+    private String fileName;
 }

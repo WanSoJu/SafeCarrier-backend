@@ -26,13 +26,13 @@ public class DataService {
         String dataType = uploadDto.getDataType();
         switch (dataType){
             case "IMAGE":
-                encryptedData=EncryptedData.builder().image(encrypted).dtype(1).build();
+                encryptedData=EncryptedData.builder().image(encrypted).dtype(1).fileName(uploadDto.getFileName()).build();
                 break;
             case "TEXT":
-                encryptedData=EncryptedData.builder().text(encrypted).dtype(3).build();
+                encryptedData=EncryptedData.builder().text(encrypted).dtype(3).fileName(uploadDto.getFileName()).build();
                 break;
             case "VIDEO":
-                encryptedData=EncryptedData.builder().video(encrypted).dtype(2).build();
+                encryptedData=EncryptedData.builder().video(encrypted).dtype(2).fileName(uploadDto.getFileName()).build();
                 break;
             default:
                 encryptedData=null;
