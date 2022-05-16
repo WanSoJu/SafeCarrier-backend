@@ -52,4 +52,49 @@ public class DataService {
         return link.getId();
     }
 
+    public byte[] getDataByLid(String lid){
+        Link link = linkRepository.findByLid(lid);
+        if(link==null)
+            return null;
+        ReadCount readCount = link.getReadCount();
+        boolean check = checkReadCount(link);
+        if(!check)
+            return null;
+        int leftReadCount = updateReadCount(readCount);
+        EncryptedData data = link.getData();
+        switch (data.getDtype()){
+            case 1:
+                return data.getImageData();
+            case 2:
+                return data.getVideoData();
+            case 3:
+                return data.getTextData();
+        }
+        return null;
+    }
+
+
+    private boolean checkReadCount(Link link){
+        ReadCount readCount = link.getReadCount();
+        Integer readLimit = readCount.getReadLimit();
+        Integer count = readCount.getReadCount();
+        if(readLimit.equals(count)){
+            deleteData(link, readCount);
+            return false;
+        }
+        return true;
+    }
+
+    private void deleteData(Link link,ReadCount readCount){
+        EncryptedData data = link.getData();
+        linkRepository.delete(link);
+        readRepository.delete(readCount);
+        dataRepository.delete(data);
+    }
+
+    private int updateReadCount(ReadCount readCount){
+        Integer count = readCount.updateReadCount();
+        readRepository.save(readCount);
+        return readCount.getReadLimit()-count; //(이번 조회 이후의) 잔여 조회횟수 반환
+    }
 }

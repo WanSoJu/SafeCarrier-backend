@@ -27,5 +27,7 @@ public class ReadCount {
         this.readLimit=limit;
     }
 
-
+    public Integer updateReadCount(){
+        return ++this.readCount;
+    }
 }

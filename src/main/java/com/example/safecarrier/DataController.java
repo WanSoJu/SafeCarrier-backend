@@ -22,5 +22,14 @@ public class DataController {
         return new ResponseEntity<>(linkId, HttpStatus.OK); //200
     }
 
+    @GetMapping("/{lid}")
+    public ResponseEntity<byte[]> getDataByLink(@PathVariable String lid){
+        byte[] encryptedData = dataService.getDataByLid(lid);
+        if(encryptedData==null){
+            return new ResponseEntity<>(null,HttpStatus.NO_CONTENT); //존재하지 않는 링크에 대한 요청 or 권한이 마감된 요청, 204
+        }
+        return new ResponseEntity<>(encryptedData,HttpStatus.OK); //200
+    }
 
+    //복호화 성공을 알리는 API
 }
