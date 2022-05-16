@@ -56,11 +56,6 @@ public class DataService {
         Link link = linkRepository.findByLid(lid);
         if(link==null)
             return null;
-        ReadCount readCount = link.getReadCount();
-        boolean check = checkReadCount(link);
-        if(!check)
-            return null;
-        int leftReadCount = updateReadCount(readCount);
         EncryptedData data = link.getData();
         switch (data.getDtype()){
             case 1:
@@ -74,15 +69,18 @@ public class DataService {
     }
 
 
-    private boolean checkReadCount(Link link){
+    //readCount 체크하는 부분을 "복호화 성공 수신 API"로 넘겨야함
+    //이번 조회 이후 잔여 횟수 반환
+    public Integer checkReadCountByLid(String lid){
+        Link link = linkRepository.findByLid(lid);
         ReadCount readCount = link.getReadCount();
         Integer readLimit = readCount.getReadLimit();
         Integer count = readCount.getReadCount();
-        if(readLimit.equals(count)){
+        if(readLimit.equals(count+1)){ //이번에 조회하면 더 이상 조회 불가능한 경우, 바로 삭제
             deleteData(link, readCount);
-            return false;
+            return 0;
         }
-        return true;
+        return updateReadCount(readCount);
     }
 
     private void deleteData(Link link,ReadCount readCount){
