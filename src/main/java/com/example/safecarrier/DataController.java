@@ -1,6 +1,7 @@
 package com.example.safecarrier;
 
 import com.example.safecarrier.dto.AllResponse;
+import com.example.safecarrier.dto.DetailResponse;
 import com.example.safecarrier.dto.UploadDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,8 @@ public class DataController {
     }
 
     @GetMapping("/{lid}")
-    public ResponseEntity<byte[]> getDataByLink(@PathVariable String lid){
-        byte[] encryptedData = dataService.getDataByLid(lid);
+    public ResponseEntity<DetailResponse> getDataByLink(@PathVariable String lid){
+        DetailResponse encryptedData = dataService.getDataByLid(lid);
         if(encryptedData==null){
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT); //존재하지 않는 링크에 대한 요청 or 권한이 마감된 요청, 204
         }

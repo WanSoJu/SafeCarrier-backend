@@ -4,6 +4,7 @@ import com.example.safecarrier.domain.EncryptedData;
 import com.example.safecarrier.domain.Link;
 import com.example.safecarrier.domain.ReadCount;
 import com.example.safecarrier.dto.AllResponse;
+import com.example.safecarrier.dto.DetailResponse;
 import com.example.safecarrier.dto.UploadDto;
 import com.example.safecarrier.repository.EncryptedDataRepository;
 import com.example.safecarrier.repository.LinkRepository;
@@ -58,18 +59,18 @@ public class DataService {
         return link.getId();
     }
 
-    public byte[] getDataByLid(String lid){
+    public DetailResponse getDataByLid(String lid){
         Link link = linkRepository.findByLid(lid);
         if(link==null)
             return null;
         EncryptedData data = link.getData();
         switch (data.getDtype()){
             case 1:
-                return data.getImageData();
+                return new DetailResponse(data.getFileName(),data.getImageData());
             case 2:
-                return data.getVideoData();
+                return new DetailResponse(data.getFileName(),data.getVideoData());
             case 3:
-                return data.getTextData();
+                return new DetailResponse(data.getFileName(),data.getTextData());
         }
         return null;
     }
