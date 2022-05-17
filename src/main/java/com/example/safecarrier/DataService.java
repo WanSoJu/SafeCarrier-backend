@@ -3,12 +3,18 @@ package com.example.safecarrier;
 import com.example.safecarrier.domain.EncryptedData;
 import com.example.safecarrier.domain.Link;
 import com.example.safecarrier.domain.ReadCount;
+import com.example.safecarrier.dto.AllResponse;
 import com.example.safecarrier.dto.UploadDto;
 import com.example.safecarrier.repository.EncryptedDataRepository;
 import com.example.safecarrier.repository.LinkRepository;
 import com.example.safecarrier.repository.ReadCountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -94,5 +100,16 @@ public class DataService {
         Integer count = readCount.updateReadCount();
         readRepository.save(readCount);
         return readCount.getReadLimit()-count; //(이번 조회 이후의) 잔여 조회횟수 반환
+    }
+
+    public List<AllResponse> getAllDataResponses(String ids){
+        List<Link> links = Arrays.stream(ids.split(","))
+                .map(id -> linkRepository.findById(Long.parseLong(id)).orElse(null))
+                .collect(Collectors.toList());
+
+        return links.stream()
+                .filter(Objects::nonNull)
+                .map(AllResponse::generateResponse)
+                .collect(Collectors.toList());
     }
 }
