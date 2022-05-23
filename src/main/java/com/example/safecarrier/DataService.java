@@ -59,6 +59,10 @@ public class DataService {
         return link.getId();
     }
 
+    public Link checkLidExistence(String lid){
+        return linkRepository.findByLid(lid);
+    }
+
     public DetailResponse getDataByLid(String lid){
         Link link = linkRepository.findByLid(lid);
         if(link==null)

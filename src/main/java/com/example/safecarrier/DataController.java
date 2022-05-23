@@ -1,5 +1,6 @@
 package com.example.safecarrier;
 
+import com.example.safecarrier.domain.Link;
 import com.example.safecarrier.dto.AllResponse;
 import com.example.safecarrier.dto.DetailResponse;
 import com.example.safecarrier.dto.UploadDto;
@@ -18,6 +19,10 @@ public class DataController {
 
     @PostMapping("")
     public ResponseEntity<Long> uploadEncryptedData(@RequestBody UploadDto uploadDto){
+        Link lidExistence = dataService.checkLidExistence(uploadDto.getLid());
+        if(lidExistence!=null){
+            return new ResponseEntity<>(null,HttpStatus.CONFLICT);
+        }
         Long linkId = dataService.saveUploadedData(uploadDto);
         if(linkId==null){
             return new ResponseEntity<>(linkId, HttpStatus.BAD_REQUEST); //400
