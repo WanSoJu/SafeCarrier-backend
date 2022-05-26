@@ -75,11 +75,11 @@ public class DataService {
         EncryptedData data = link.getData();
         switch (data.getDtype()){
             case 1:
-                return new DetailResponse(data.getFileName(),data.getImageData());
+                return new DetailResponse(data.getFileName(),data.getImageData(),"IMAGE");
             case 2:
-                return new DetailResponse(data.getFileName(),data.getVideoData());
+                return new DetailResponse(data.getFileName(),data.getVideoData(),"VIDEO");
             case 3:
-                return new DetailResponse(data.getFileName(),data.getTextData());
+                return new DetailResponse(data.getFileName(),data.getTextData(),"TEXT");
         }
         return null;
     }

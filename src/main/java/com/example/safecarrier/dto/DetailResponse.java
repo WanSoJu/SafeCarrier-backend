@@ -11,10 +11,12 @@ import lombok.Setter;
 public class DetailResponse {
     private String fileName;
     private byte[] encryptedData;
+    private String dataType;
 
     @Builder
-    public DetailResponse(String name, byte[] data){
+    public DetailResponse(String name, byte[] data,String dataType){
         this.fileName=name;
         this.encryptedData=data;
+        this.dataType=dataType;
     }
 }
