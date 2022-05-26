@@ -50,4 +50,13 @@ public class DataController {
     public ResponseEntity<List<AllResponse>> getAllSendData(@RequestParam String id){
         return new ResponseEntity<>(dataService.getAllDataResponses(id),HttpStatus.OK);
     }
+
+    @GetMapping("/link/{linkId}")
+    public ResponseEntity<String> getLinkByLinkId(@PathVariable Long linkId){
+        Link link = dataService.findLinkById(linkId);
+        if(link!=null&&link.getLink()!=null){
+            return new ResponseEntity<>(link.getLink(),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+    }
 }

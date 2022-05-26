@@ -11,18 +11,23 @@ import com.example.safecarrier.repository.LinkRepository;
 import com.example.safecarrier.repository.ReadCountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class DataService {
     private final EncryptedDataRepository dataRepository;
     private final LinkRepository linkRepository;
     private final ReadCountRepository readRepository;
+    private final EntityManager em;
 
     public Long saveUploadedData(UploadDto uploadDto){
         ReadCount readCount = ReadCount.builder()
@@ -116,5 +121,10 @@ public class DataService {
                 .filter(Objects::nonNull)
                 .map(AllResponse::generateResponse)
                 .collect(Collectors.toList());
+    }
+
+    public Link findLinkById(Long linkId){
+        Optional<Link> link = linkRepository.findById(linkId);
+        return link.orElse(null);
     }
 }
