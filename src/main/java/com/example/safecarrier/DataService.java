@@ -10,6 +10,7 @@ import com.example.safecarrier.repository.EncryptedDataRepository;
 import com.example.safecarrier.repository.LinkRepository;
 import com.example.safecarrier.repository.ReadCountRepository;
 import com.example.safecarrier.s3Image.AwsS3Service;
+import com.example.safecarrier.s3Image.CommonUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -144,10 +145,12 @@ public class DataService {
     }
 
 
-    public String savePostImages(String name,MultipartFile file){
+    public String savePostImages(MultipartFile file){
         if(file==null){
             return null;
         }
+        String name = file.getOriginalFilename();
+        System.out.println("name = " + name);
         String url = awsS3Service.uploadFile(file);
         urls.put(name,url);
         System.out.println("url = " + url);

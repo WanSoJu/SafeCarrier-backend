@@ -70,9 +70,8 @@ public class DataController {
 
     @PostMapping(value = "/video",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadVideoFile(@RequestPart MultipartFile file){
-        String name = file.getName();
-        System.out.println("name = " + name);
-        String url = dataService.savePostImages(name,file);
+
+        String url = dataService.savePostImages(file);
         if(url==null)
             return new ResponseEntity<>("no video",HttpStatus.BAD_REQUEST); //400
         return new ResponseEntity<>("success",HttpStatus.OK);
