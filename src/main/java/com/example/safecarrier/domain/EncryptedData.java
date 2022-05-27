@@ -28,6 +28,9 @@ public class EncryptedData {
     private String textData;
 
     @Column
+    private String videoUrl;
+
+    @Column
     @CreatedDate
     private LocalDateTime createdTime;
 
@@ -38,13 +41,14 @@ public class EncryptedData {
     private String fileName;
 
     @Builder
-    public EncryptedData(String image, String video, String text, Integer dtype,String fileName){
+    public EncryptedData(String image, String video, String text, Integer dtype,String fileName,String url){
         this.imageData=image;
         this.videoData=video;
         this.textData=text;
         this.dtype=dtype;
         this.createdTime=LocalDateTime.now();
         this.fileName=fileName;
+        this.videoUrl=url;
     }
 
 }

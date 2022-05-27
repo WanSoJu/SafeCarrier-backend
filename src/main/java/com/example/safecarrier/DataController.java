@@ -3,6 +3,7 @@ package com.example.safecarrier;
 import com.example.safecarrier.domain.Link;
 import com.example.safecarrier.dto.AllResponse;
 import com.example.safecarrier.dto.DetailResponse;
+import com.example.safecarrier.dto.ReadCountResponse;
 import com.example.safecarrier.dto.UploadDto;
 import com.example.safecarrier.s3Image.AwsS3Service;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ import java.util.List;
 @RequestMapping("/data")
 public class DataController {
     private final DataService dataService;
-    private final AwsS3Service awsS3Service;
+
 
     @PostMapping("")
     public ResponseEntity<Long> uploadEncryptedData(@RequestBody UploadDto uploadDto){
@@ -45,9 +46,14 @@ public class DataController {
 
     //복호화 성공을 알리는 API
     @GetMapping("/read/{lid}")
-    public ResponseEntity<Integer> getLeftReadCount(@PathVariable String lid){
+    public ResponseEntity<ReadCountResponse> getLeftReadCount(@PathVariable String lid){
         Integer leftCount = dataService.checkReadCountByLid(lid);
-        return new ResponseEntity<>(leftCount,HttpStatus.OK); //남은 조회 수 반환 (0이면 이번 조회 이후로 더이상 조회 불가 -> 데이터베이스에서 삭제함)
+        String videoUrl = dataService.findVideoUrl(lid);
+        ReadCountResponse response = ReadCountResponse.builder()
+                .count(leftCount).url(videoUrl).build();
+        if(videoUrl==null)
+            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND); //404 잘못된 lid 요청 또는 videoUrl 이 저장되어 있지 않음
+        return new ResponseEntity<>(response,HttpStatus.OK); //남은 조회 수 반환 (0이면 이번 조회 이후로 더이상 조회 불가 -> 데이터베이스에서 삭제함)
     }
 
     @GetMapping("")
@@ -64,24 +70,14 @@ public class DataController {
         return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping(value = "/test",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadFileTest(@RequestPart MultipartFile file){
+    @PostMapping(value = "/video",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadVideoFile(@RequestPart MultipartFile file){
         String name = file.getName();
         System.out.println("name = " + name);
-        String contentType = file.getContentType();
-        System.out.println("contentType = " + contentType);
-        String s = savePostImages(file);
-        return new ResponseEntity<>("url: "+s,HttpStatus.OK);
+        String url = dataService.savePostImages(name,file);
+        if(url==null)
+            return new ResponseEntity<>("no video",HttpStatus.BAD_REQUEST); //400
+        return new ResponseEntity<>("success",HttpStatus.OK);
     }
 
-    private String savePostImages(MultipartFile file){
-        if(file==null){
-            return null;
-        }
-
-            String originName=file.getOriginalFilename();
-            String url = awsS3Service.uploadFile(file);
-            return url;
-
-    }
 }

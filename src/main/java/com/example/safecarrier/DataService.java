@@ -9,15 +9,14 @@ import com.example.safecarrier.dto.UploadDto;
 import com.example.safecarrier.repository.EncryptedDataRepository;
 import com.example.safecarrier.repository.LinkRepository;
 import com.example.safecarrier.repository.ReadCountRepository;
+import com.example.safecarrier.s3Image.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +26,9 @@ public class DataService {
     private final EncryptedDataRepository dataRepository;
     private final LinkRepository linkRepository;
     private final ReadCountRepository readRepository;
-    private final EntityManager em;
+    private final AwsS3Service awsS3Service;
+
+    public static HashMap<String,String> urls=new HashMap<>();
 
     public Long saveUploadedData(UploadDto uploadDto){
         ReadCount readCount = ReadCount.builder()
@@ -44,7 +45,10 @@ public class DataService {
                 encryptedData=EncryptedData.builder().text(encrypted).dtype(3).fileName(uploadDto.getFileName()).build();
                 break;
             case "VIDEO":
-                encryptedData=EncryptedData.builder().video(encrypted).dtype(2).fileName(uploadDto.getFileName()).build();
+                String name=uploadDto.getFileName();
+                String url = urls.get(name);
+                urls.remove(name);
+                encryptedData=EncryptedData.builder().video(encrypted).dtype(2).fileName(uploadDto.getFileName()).url(url).build();
                 break;
             default:
                 encryptedData=null;
@@ -82,6 +86,17 @@ public class DataService {
                 return new DetailResponse(data.getFileName(),data.getTextData(),"TEXT");
         }
         return null;
+    }
+
+    public String findVideoUrl(String lid){
+        Link link = linkRepository.findByLid(lid);
+        if(link==null)
+            return null;
+        EncryptedData data = link.getData();
+        String videoUrl = data.getVideoUrl();
+        if(videoUrl==null)
+            return null;
+        return videoUrl;
     }
 
 
@@ -126,5 +141,16 @@ public class DataService {
     public Link findLinkById(Long linkId){
         Optional<Link> link = linkRepository.findById(linkId);
         return link.orElse(null);
+    }
+
+
+    public String savePostImages(String name,MultipartFile file){
+        if(file==null){
+            return null;
+        }
+        String url = awsS3Service.uploadFile(file);
+        urls.put(name,url);
+        System.out.println("url = " + url);
+        return url;
     }
 }
