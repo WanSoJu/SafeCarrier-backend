@@ -51,8 +51,6 @@ public class DataController {
         String videoUrl = dataService.findVideoUrl(lid);
         ReadCountResponse response = ReadCountResponse.builder()
                 .count(leftCount).url(videoUrl).build();
-        if(videoUrl==null)
-            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND); //404 잘못된 lid 요청 또는 videoUrl 이 저장되어 있지 않음
         return new ResponseEntity<>(response,HttpStatus.OK); //남은 조회 수 반환 (0이면 이번 조회 이후로 더이상 조회 불가 -> 데이터베이스에서 삭제함)
     }
 
