@@ -4,6 +4,7 @@ import com.example.safecarrier.domain.Link;
 import com.example.safecarrier.dto.AllResponse;
 import com.example.safecarrier.dto.DetailResponse;
 import com.example.safecarrier.dto.UploadDto;
+import com.example.safecarrier.s3Image.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequestMapping("/data")
 public class DataController {
     private final DataService dataService;
+    private final AwsS3Service awsS3Service;
 
     @PostMapping("")
     public ResponseEntity<Long> uploadEncryptedData(@RequestBody UploadDto uploadDto){
@@ -68,6 +70,18 @@ public class DataController {
         System.out.println("name = " + name);
         String contentType = file.getContentType();
         System.out.println("contentType = " + contentType);
-        return new ResponseEntity<>("name: "+name+", type: "+contentType,HttpStatus.OK);
+        String s = savePostImages(file);
+        return new ResponseEntity<>("url: "+s,HttpStatus.OK);
+    }
+
+    private String savePostImages(MultipartFile file){
+        if(file==null){
+            return null;
+        }
+
+            String originName=file.getOriginalFilename();
+            String url = awsS3Service.uploadFile(file);
+            return url;
+
     }
 }
