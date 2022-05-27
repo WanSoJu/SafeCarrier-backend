@@ -18,14 +18,14 @@ public class EncryptedData {
     @Column(name = "data_id")
     private Long id;
 
-    @Column(columnDefinition = "LONGBLOB")
-    private byte[] imageData;
+    @Column(columnDefinition = "LONGTEXT")
+    private String imageData;
 
-    @Column(columnDefinition = "LONGBLOB")
-    private byte[] videoData;
+    @Column(columnDefinition = "LONGTEXT")
+    private String videoData;
 
-    @Column(columnDefinition = "LONGBLOB")
-    private byte[] textData;
+    @Column(columnDefinition = "LONGTEXT")
+    private String textData;
 
     @Column
     @CreatedDate
@@ -38,7 +38,7 @@ public class EncryptedData {
     private String fileName;
 
     @Builder
-    public EncryptedData(byte[] image, byte[] video, byte[] text, Integer dtype,String fileName){
+    public EncryptedData(String image, String video, String text, Integer dtype,String fileName){
         this.imageData=image;
         this.videoData=video;
         this.textData=text;

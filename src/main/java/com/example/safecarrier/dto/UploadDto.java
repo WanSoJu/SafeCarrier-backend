@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UploadDto {
-    private byte[] encryptedData;
+    private String encryptedData;
     private String dataType;
     private Integer readLimit;
     private String appLink;
@@ -16,7 +16,7 @@ public class UploadDto {
     private String fileName;
 
 
-    public UploadDto(byte[] encryptedData, String dataType, Integer readLimit, String appLink, String lid, String fileName) {
+    public UploadDto(String encryptedData, String dataType, Integer readLimit, String appLink, String lid, String fileName) {
         this.encryptedData = encryptedData;
         this.dataType = dataType;
         this.readLimit = readLimit;

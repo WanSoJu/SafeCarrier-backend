@@ -34,7 +34,7 @@ public class DataService {
                 .limit(uploadDto.getReadLimit()).build();
 
         EncryptedData encryptedData;
-        byte[] encrypted= uploadDto.getEncryptedData();
+        String encrypted= uploadDto.getEncryptedData();
         String dataType = uploadDto.getDataType();
         switch (dataType){
             case "IMAGE":
