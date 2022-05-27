@@ -6,8 +6,10 @@ import com.example.safecarrier.dto.DetailResponse;
 import com.example.safecarrier.dto.UploadDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -58,5 +60,14 @@ public class DataController {
             return new ResponseEntity<>(link.getLink(),HttpStatus.OK);
         }
         return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping(value = "/test",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadFileTest(@RequestPart MultipartFile file){
+        String name = file.getName();
+        System.out.println("name = " + name);
+        String contentType = file.getContentType();
+        System.out.println("contentType = " + contentType);
+        return new ResponseEntity<>("name: "+name+", type: "+contentType,HttpStatus.OK);
     }
 }
