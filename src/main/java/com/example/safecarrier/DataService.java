@@ -29,7 +29,7 @@ public class DataService {
     private final ReadCountRepository readRepository;
     private final AwsS3Service awsS3Service;
 
-    public static HashMap<String,String> urls=new HashMap<>();
+//    public static HashMap<String,String> urls=new HashMap<>();
 
     public Long saveUploadedData(UploadDto uploadDto){
         ReadCount readCount = ReadCount.builder()
@@ -46,10 +46,10 @@ public class DataService {
                 encryptedData=EncryptedData.builder().text(encrypted).dtype(3).fileName(uploadDto.getFileName()).build();
                 break;
             case "VIDEO":
-                String name=uploadDto.getFileName();
-                String url = urls.get(name);
-                urls.remove(name);
-                encryptedData=EncryptedData.builder().video(encrypted).dtype(2).fileName(uploadDto.getFileName()).url(url).build();
+//                String name=uploadDto.getFileName();
+//                String url = urls.get(name);
+//                urls.remove(name);
+                encryptedData=EncryptedData.builder().video(encrypted).dtype(2).fileName(uploadDto.getFileName()).build();
                 break;
             default:
                 encryptedData=null;
@@ -89,16 +89,16 @@ public class DataService {
         return null;
     }
 
-    public String findVideoUrl(String lid){
-        Link link = linkRepository.findByLid(lid);
-        if(link==null)
-            return null;
-        EncryptedData data = link.getData();
-        String videoUrl = data.getVideoUrl();
-        if(videoUrl==null)
-            return null;
-        return videoUrl;
-    }
+//    public String findVideoUrl(String lid){
+//        Link link = linkRepository.findByLid(lid);
+//        if(link==null)
+//            return null;
+//        EncryptedData data = link.getData();
+//        String videoUrl = data.getVideoUrl();
+//        if(videoUrl==null)
+//            return null;
+//        return videoUrl;
+//    }
 
 
     //readCount 체크하는 부분을 "복호화 성공 수신 API"로 넘겨야함
@@ -152,8 +152,8 @@ public class DataService {
         String name = file.getOriginalFilename();
         System.out.println("name = " + name);
         String url = awsS3Service.uploadFile(file);
-        urls.put(name,url);
-        System.out.println("url = " + url);
+//        urls.put(name,url);
+//        System.out.println("url = " + url);
         return url;
     }
 }
