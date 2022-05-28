@@ -1,10 +1,7 @@
 package com.example.safecarrier;
 
 import com.example.safecarrier.domain.Link;
-import com.example.safecarrier.dto.AllResponse;
-import com.example.safecarrier.dto.DetailResponse;
-import com.example.safecarrier.dto.ReadCountResponse;
-import com.example.safecarrier.dto.UploadDto;
+import com.example.safecarrier.dto.*;
 import com.example.safecarrier.s3Image.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -69,12 +66,12 @@ public class DataController {
     }
 
     @PostMapping(value = "/video",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadVideoFile(@RequestPart MultipartFile file){
+    public ResponseEntity<UrlResponse> uploadVideoFile(@RequestPart MultipartFile file){
 
         String url = dataService.savePostImages(file);
         if(url==null)
-            return new ResponseEntity<>("no video",HttpStatus.BAD_REQUEST); //400
-        return new ResponseEntity<>(url,HttpStatus.OK);
+            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST); //400
+        return new ResponseEntity<>(new UrlResponse(url),HttpStatus.OK);
     }
 
 }
