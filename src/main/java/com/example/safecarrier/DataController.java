@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequiredArgsConstructor
@@ -72,6 +73,14 @@ public class DataController {
         if(url==null)
             return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST); //400
         return new ResponseEntity<>(new UrlResponse(url),HttpStatus.OK);
+    }
+
+    @RequestMapping("/download/info")
+    public ModelAndView showDownload() {
+        System.out.println("enter info");
+        ModelAndView view = new ModelAndView();
+        view.setViewName("intro");
+        return view;
     }
 
 }

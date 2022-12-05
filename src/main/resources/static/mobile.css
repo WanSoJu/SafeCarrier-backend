@@ -1,0 +1,43 @@
+#button {
+  width: 180px;
+  height: 50px;
+  font-size:15px;
+  font-family: 'Nanum Gothic';
+  color: white;
+  line-height: 50px;
+  text-align: center;
+  background: #9dd84b;
+  border-radius: 12px;
+    border:none;
+}
+
+@media ( min-width: 768px ) {
+#button {
+  width: 180px;
+  height: 50px;
+  font-size:30px;
+  font-family: 'Nanum Gothic';
+  color: white;
+  line-height: 15px;
+  text-align: center;
+  background: #9dd84b;
+  border-radius: 12px;
+    border:none;
+}
+
+
+}
+@media ( min-width: 1024px ) {
+#button {
+  width: 180px;
+  height: 50px;
+  font-size:25px;
+  font-family: 'Nanum Gothic';
+  color: white;
+  line-height: 50px;
+  text-align: center;
+  background: #9dd84b;
+  border-radius: 12px;
+  border:none;
+}
+}
